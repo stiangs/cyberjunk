@@ -17,6 +17,8 @@ class Appointment {
     var currency: String?
     var location: (latitude: Double, longtitude: Double)?
     var date: Date?
+    var id: String?
+    var meetup: [String]?
     
     convenience init(name: String, attendees: [String], punishment: Double, currency: String, location: (latitude: Double, longtitude: Double), date: Date) {
         self.init()
@@ -27,6 +29,8 @@ class Appointment {
         self.location = location
         self.date = date
     }
+    
+
     
     var amountFormatted: String {
         guard currency != nil && punishment != nil else {
@@ -60,16 +64,14 @@ class Appointment {
     }
     
     func JSON() -> [String: Any] {
-        var appointment = [String: String]()
+        var appointment = [String: Any]()
         
         appointment["name"] = name!
-        var nameArray = "["
+        var nameArray = [String]()
         for number in attendees! {
-            nameArray += number + ", "
+            nameArray.append(number)
         }
-        nameArray.remove(at: nameArray.index(before: nameArray.endIndex))
-        nameArray.remove(at: nameArray.index(before: nameArray.endIndex))
-        nameArray += "]"
+
 
         appointment["attendees"] = nameArray
         appointment["punishment"] = String(punishment!)

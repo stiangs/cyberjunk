@@ -19,22 +19,28 @@ class AppointmentsViewController: UIViewController {
         let swipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(swiped(_:)))
         blanketView.addGestureRecognizer(swipeGestureRecognizer)
         
+        
         setupAttendeesView()
         
-        testAPI()
-        testPost()
         configureViews()
     }
     
+    var delegate: CellDelegate!
     
-    
-    
+    var flipped = false
     func swiped(_ gesture: UIGestureRecognizer) {
         print("Swiping to ")
+        if flipped {
+            flipped = false
+            antiFlip()
+        } else {
+            flipped = true
+            flip()
+        }
     }
     
     func flip() {
-        let transitionOptions: UIViewAnimationOptions = [.transitionFlipFromRight, .showHideTransitionViews]
+        let transitionOptions: UIViewAnimationOptions = [.transitionFlipFromLeft, .showHideTransitionViews]
         
         UIView.transition(with: blanketView, duration: 1.0, options: transitionOptions, animations: {
             self.blanketView.isHidden = true
@@ -45,13 +51,32 @@ class AppointmentsViewController: UIViewController {
         })
     }
     
+    func antiFlip() {
+        let transitionOptions: UIViewAnimationOptions = [.transitionFlipFromLeft, .showHideTransitionViews]
+        
+        UIView.transition(with: attendeesView, duration: 1.0, options: transitionOptions, animations: {
+            self.attendeesView.isHidden = true
+        })
+        
+        UIView.transition(with: blanketView, duration: 1.0, options: transitionOptions, animations: {
+            self.blanketView.isHidden = false
+        })
+    }
+    
     
     private func setupAttendeesView() {
         attendeesView = UITableView(frame: blanketView.frame)
         attendeesView.isHidden = true
         attendeesView.dataSource = self
         attendeesView.delegate = self
+        attendeesView.backgroundColor = UIColor.gray.withAlphaComponent(0.75)
+        attendeesView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        attendeesView.layer.cornerRadius = 8
+        attendeesView.separatorStyle = .none
         
+        
+        let swipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(swiped(_:)))
+        attendeesView.addGestureRecognizer(swipeGestureRecognizer)
         
         view.addSubview(attendeesView)
     }
@@ -60,7 +85,7 @@ class AppointmentsViewController: UIViewController {
     
     var appointment: Appointment! {
         didSet {
-           
+           self.title = appointment.appointmentName
         }
     }
     
@@ -77,13 +102,15 @@ class AppointmentsViewController: UIViewController {
         locationLabel.text = appointment.locationName
         // Set the counter and start updating
         count = appointment.date!.seconds(from: Date())
-        
         _ = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+        
+        
     }
     
     
     @IBAction func postpone(_ sender: Any) {
         count += 300
+        delegate.postponedAppointment(appointment: appointment)
     }
     
     var count = 0
@@ -119,13 +146,24 @@ extension AppointmentsViewController: UITableViewDelegate, UITableViewDataSource
     
     
      func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-     let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-     
-     return cell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+    
+        cell.textLabel?.text = appointment.attendees![indexPath.row]
+        cell.backgroundColor = .clear
+        cell.textLabel?.font = cell.textLabel?.font.withSize(40)
+        cell.textLabel?.textColor = .white
+        
+        return cell
         
      }
    
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80.0
+    }
+    
+    
+    
     
 }
 

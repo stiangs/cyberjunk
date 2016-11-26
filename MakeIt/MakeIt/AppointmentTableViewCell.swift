@@ -15,6 +15,8 @@ class AppointmentTableViewCell: UITableViewCell {
         
     }
     
+    
+    
     // MARK: Labels
     @IBOutlet weak var appointmentNameLabel: UILabel!
     
@@ -28,6 +30,7 @@ class AppointmentTableViewCell: UITableViewCell {
     
     @IBOutlet weak var appointmentTimeLabel: UILabel!
     
+    var timer: Timer!
     var appointment: Appointment! {
         didSet {
             // Set UI elements here
@@ -41,7 +44,10 @@ class AppointmentTableViewCell: UITableViewCell {
             // Set the counter and start updating
             count = appointment.date!.seconds(from: Date())
             
-            _ = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(AppointmentTableViewCell.update), userInfo: nil, repeats: true)
+            if timer == nil {
+                timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(AppointmentTableViewCell.update), userInfo: nil, repeats: true)
+            }
+            
             
         }
     }

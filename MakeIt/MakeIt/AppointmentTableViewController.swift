@@ -8,17 +8,38 @@
 
 import UIKit
 
-class AppointmentTableViewController: UITableViewController {
+protocol CellDelegate {
+    func postponedAppointment(appointment: Appointment)
+}
+
+class AppointmentTableViewController: UITableViewController, CellDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.title = "Appointments"
         view.backgroundColor = UIColor(patternImage: #imageLiteral(resourceName: "Background Image 1")).withAlphaComponent(0.6)
+        
+        testAPI { (appointments) in
+            if appointments != nil {
+                self.appointments = appointments!
+                self.tableView.reloadData()
+            }
+        }
+        
         
         tableView.separatorStyle = .none
     }
     
-    var appointment = Appointment.testAppointments()[0]
+    var appointments = [Appointment]()
+    
+    func postponedAppointment(appointment: Appointment) {
+        for app in appointments {
+            if app.id == appointment.id {
+                app.date = app.date?.addingTimeInterval(300)
+            }
+        }
+        tableView.reloadData()
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -56,7 +77,8 @@ class AppointmentTableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowAppointment" {
             if let avc = segue.destination as? AppointmentsViewController {
-                avc.appointment = appointment
+                avc.appointment = appointments[(tableView.indexPathForSelectedRow?.row)!]
+                avc.delegate = self
             }
         }
     }
@@ -71,7 +93,8 @@ class AppointmentTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 3
+        print(appointments.count)
+        return appointments.count
     }
 
    
@@ -109,7 +132,7 @@ class AppointmentTableViewController: UITableViewController {
        
         cell.contentView.addSubview(cell.cellView)
         cell.contentView.sendSubview(toBack: cell.cellView)
-        cell.appointment = appointment
+        cell.appointment = appointments[indexPath.row]
 
         return cell
     }

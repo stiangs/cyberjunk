@@ -1,14 +1,14 @@
 //
-//  TableViewController.swift
-//  
+//  PunishmentTableViewController.swift
+//  MakeIt
 //
 //  Created by Mathias Breistein on 26.11.2016.
-//
+//  Copyright © 2016 CyberDollarBoys. All rights reserved.
 //
 
 import UIKit
 
-class TableViewController: UITableViewController {
+class PunishmentTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

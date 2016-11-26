@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import SwiftyJSON
 
 
 func testPost() {
@@ -24,14 +25,67 @@ func testPost() {
 
 let url = "http://85.188.10.170:3000"
 
-func testAPI() {
-    Alamofire.request(url, method: .get).responseJSON { (response) in
-        
-        if let data = response.result.value as? [String: String] {
-            print(data["name"]!)
+func testAPI(completion: @escaping ((_ appointments: [Appointment]?) -> ()) ) {
+    
+    let testUrl = url + "/94255783/appointment"
+    Alamofire.request(testUrl, method: .get).responseJSON { (response) in
+        if(response.result.value) != nil {
+            let json = JSON(response.result.value!)
+            var appointments = [Appointment]()
+            for object in json.array! {
+                
+                let appointment = Appointment()
+                
+                if let id = object["_id"].string {
+                    appointment.id = id
+                }
+                
+                if let name = object["name"].string {
+                    appointment.name = name
+                }
+                
+                if let currency = object["currency"].string {
+                    appointment.currency = currency
+                }
+                
+                if let meetup = object["meetup"].arrayObject as? [String] {
+                    appointment.meetup = meetup
+                }
+                
+                
+                if let lon = Double(object["lon"].string!) {
+                    if let lat = Double(object["lat"].string!) {
+                      
+                        let location = (latitude: lat, longtitude: lon)
+                        appointment.location = location
+                    }
+                    
+                }
+                
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateStyle = .short
+                dateFormatter.timeStyle = .short
+                
+                
+                if let date = dateFormatter.date(from: object["date"].string!) {
+                    appointment.date = date
+                }
+                
+                if let punishment = object["punishment"].double {
+                    appointment.punishment = punishment
+                }
+                
+                if let attendees = object["attendees"].arrayObject as? [String] {
+                    appointment.attendees = attendees
+                }
+             
+                print(object)
+                appointments.append(appointment)
+            }
+            completion(appointments)
+        } else {
+            completion(nil)
         }
-        
-        
     }
     
 }
