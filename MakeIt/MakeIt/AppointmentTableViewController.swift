@@ -18,6 +18,8 @@ class AppointmentTableViewController: UITableViewController {
         tableView.separatorStyle = .none
     }
     
+    var appointment = Appointment.testAppointments()[0]
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         addButton()
@@ -54,7 +56,7 @@ class AppointmentTableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowAppointment" {
             if let avc = segue.destination as? AppointmentsViewController {
-                avc.appointment = Appointment.testAppointments()[0]
+                avc.appointment = appointment
             }
         }
     }
@@ -107,7 +109,7 @@ class AppointmentTableViewController: UITableViewController {
        
         cell.contentView.addSubview(cell.cellView)
         cell.contentView.sendSubview(toBack: cell.cellView)
-        cell.appointment = Appointment.testAppointments()[0]
+        cell.appointment = appointment
 
         return cell
     }

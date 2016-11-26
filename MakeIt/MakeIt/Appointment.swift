@@ -59,6 +59,33 @@ class Appointment {
         return "Oslo, Norway"
     }
     
+    func JSON() -> [String: Any] {
+        var appointment = [String: String]()
+        
+        appointment["name"] = name!
+        var nameArray = "["
+        for number in attendees! {
+            nameArray += number + ", "
+        }
+        nameArray.remove(at: nameArray.index(before: nameArray.endIndex))
+        nameArray.remove(at: nameArray.index(before: nameArray.endIndex))
+        nameArray += "]"
+
+        appointment["attendees"] = nameArray
+        appointment["punishment"] = String(punishment!)
+        appointment["currency"] = currency!
+        appointment["lat"] = String(location!.latitude)
+        appointment["lon"] = String(location!.longtitude)
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .short
+        dateFormatter.timeStyle = .short
+        appointment["date"] = dateFormatter.string(from: date!)
+    
+    
+        return appointment
+    }
+    
     class func testAppointments() -> [Appointment] {
         var appointments = [Appointment]()
         let appointment = Appointment(
