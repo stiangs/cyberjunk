@@ -16,14 +16,40 @@ func testPost() {
     let data = appointment.JSON() as Parameters?
     let postUrl = url + "/users/" + appointment.attendees![0] + "/newappointment"
     _ = Alamofire.request(postUrl, method: .post, parameters: data, encoding: JSONEncoding.default)
-    
-    
-    
-    
+   
     
 }
 
 let url = "http://85.188.10.170:3000"
+
+func didArrive(id: String, number: String) {
+    let confirmUrl = url + "/appointments/update/" + id + "/" + number
+    _ = Alamofire.request(confirmUrl, method: .put, parameters: nil, encoding: JSONEncoding.default, headers: nil)
+}
+
+func checkArrived(for number: String, id: String, _ completion: @escaping ((Bool) -> ())) {
+    let checkUrl = url + "/appointments/arrived/" + id + "/" + number
+    _ = Alamofire.request(checkUrl, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: nil).responseJSON(completionHandler: { (response) in
+        let json = JSON(response.result.value!)
+        var value = false
+        for name in json.array! {
+            if name.string == number {
+                value = true
+            }
+        }
+        print(value)
+        completion(value)
+        
+        
+        
+    })
+    
+    
+}
+
+
+
+
 
 func testAPI(completion: @escaping ((_ appointments: [Appointment]?) -> ()) ) {
     

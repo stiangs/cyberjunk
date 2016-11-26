@@ -19,10 +19,20 @@ class AppointmentsViewController: UIViewController {
         let swipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(swiped(_:)))
         blanketView.addGestureRecognizer(swipeGestureRecognizer)
         
+        addComeButton()
         
         setupAttendeesView()
         
         configureViews()
+    }
+    
+    private func addComeButton() {
+        let button = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(arrived))
+        navigationItem.rightBarButtonItem = button
+    }
+    
+    func arrived() {
+        didArrive(id: appointment.id!, number: appointment.attendees![0])
     }
     
     var delegate: CellDelegate!
@@ -148,10 +158,18 @@ extension AppointmentsViewController: UITableViewDelegate, UITableViewDataSource
      func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
     
-        cell.textLabel?.text = appointment.attendees![indexPath.row]
+        let number = appointment.attendees![indexPath.row]
+        
+        cell.textLabel?.text = number
         cell.backgroundColor = .clear
-        cell.textLabel?.font = cell.textLabel?.font.withSize(40)
+        cell.textLabel?.font = cell.textLabel?.font.withSize(32)
         cell.textLabel?.textColor = .white
+        checkArrived(for: number, id: appointment.id!) { arrived in
+            if arrived {
+                cell.textLabel?.textColor = .green
+            } 
+        }
+        
         
         return cell
         

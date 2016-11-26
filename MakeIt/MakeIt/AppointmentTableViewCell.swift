@@ -61,7 +61,7 @@ func update() {
     
     if(count >= 0){
         let minutes = String(count / 60)
-        let seconds = count % 60 > 10 ? String(count % 60) : "0" + String(count % 60)
+        let seconds = count % 60 >= 10 ? String(count % 60) : "0" + String(count % 60)
         remainingTimeLabel.text = minutes + ":" + seconds
         count -= 1
     } else {
