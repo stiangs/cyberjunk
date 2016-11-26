@@ -19,16 +19,24 @@ class AppointmentTableViewController: UITableViewController, CellDelegate {
         self.title = "Appointments"
         view.backgroundColor = UIColor(patternImage: #imageLiteral(resourceName: "Background Image 1")).withAlphaComponent(0.6)
         
+        tableView.separatorStyle = .none
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        updateAppointments()
+    }
+    
+    
+    
+    func updateAppointments() {
         testAPI { (appointments) in
             if appointments != nil {
                 self.appointments = appointments!
                 self.tableView.reloadData()
             }
         }
-        
-        
-        tableView.separatorStyle = .none
     }
+   
     
     var appointments = [Appointment]()
     
@@ -80,7 +88,15 @@ class AppointmentTableViewController: UITableViewController, CellDelegate {
                 avc.appointment = appointments[(tableView.indexPathForSelectedRow?.row)!]
                 avc.delegate = self
             }
+        } else if segue.identifier == "toSummary" {
+            if let svc = segue.destination as? SummaryViewController {
+                svc.appointment = appointments[(tableView.indexPathForSelectedRow?.row)!]
+            }
         }
+        
+        let backItem = UIBarButtonItem()
+        backItem.title = ""
+        navigationItem.backBarButtonItem = backItem
     }
   
 
@@ -100,7 +116,12 @@ class AppointmentTableViewController: UITableViewController, CellDelegate {
    
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "ShowAppointment", sender: nil)
+        let today = Date()
+        if today > appointments[indexPath.row].date! {
+            performSegue(withIdentifier: "toSummary", sender: self)
+        } else {
+            performSegue(withIdentifier: "ShowAppointment", sender: nil)
+        }
     }
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -158,3 +179,16 @@ class AppointmentTableViewController: UITableViewController, CellDelegate {
     }
 
 }
+extension UserDefaults {
+    static func number() -> String {
+        return "95001572"
+    }
+
+}
+
+
+
+
+
+
+

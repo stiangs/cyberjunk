@@ -102,6 +102,7 @@
                     <connections>
                         <segue destination="7AW-Oz-y1r" kind="show" identifier="ShowAppointment" id="iP6-M5-8ea"/>
                         <segue destination="4wg-LV-iX5" kind="show" identifier="CreateAppointment" id="fee-Dn-XQE"/>
+                        <segue destination="PXX-Vo-BgT" kind="show" identifier="toSummary" id="MKX-xI-1zz"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aba-Fn-NUq" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -120,16 +121,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" alpha="0.5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XqF-3Z-HGa">
-                                <rect key="frame" x="0.0" y="73" width="375" height="66"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="tintColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="Title"/>
-                            </button>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QcK-5L-ctI">
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem title="Item" id="cRd-Id-Sza"/>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <connections>
+                        <outlet property="bottomToolbar" destination="QcK-5L-ctI" id="Uzt-4m-yGY"/>
+                        <outlet property="invitedFriends" destination="cRd-Id-Sza" id="V6o-hc-PZr"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sik-xc-nqE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -230,33 +235,35 @@
             </objects>
             <point key="canvasLocation" x="2072.8000000000002" y="-106.59670164917542"/>
         </scene>
-        <!--Punishment Table View Controller-->
-        <scene sceneID="ei0-qj-UoC">
+        <!--Summary View Controller-->
+        <scene sceneID="vKV-7N-ddW">
             <objects>
-                <tableViewController id="ADu-1l-jxb" customClass="PunishmentTableViewController" customModule="MakeIt" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="Eac-iB-Nt7">
+                <viewController id="PXX-Vo-BgT" customClass="SummaryViewController" customModule="MakeIt" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="JeA-dm-Q4a"/>
+                        <viewControllerLayoutGuide type="bottom" id="A2Q-dC-Ccy"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="gQm-Gp-w8O">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IDG-5L-q5R">
+                                <rect key="frame" x="0.0" y="607" width="375" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Settle">
+                                    <color key="titleColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="settle:" destination="PXX-Vo-BgT" eventType="touchUpInside" id="aOi-b4-0wW"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="BDD-Vo-de8">
-                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="BDD-Vo-de8" id="kEV-hV-CSp">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="ADu-1l-jxb" id="6n6-md-AwE"/>
-                            <outlet property="delegate" destination="ADu-1l-jxb" id="OMm-aF-FxA"/>
-                        </connections>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ySM-RV-7b0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VZX-CT-7W9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3333" y="192"/>
+            <point key="canvasLocation" x="2072.8000000000002" y="-785.75712143928047"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="y1a-da-okV">

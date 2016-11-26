@@ -40,6 +40,7 @@ class AppointmentsViewController: UIViewController {
     var flipped = false
     func swiped(_ gesture: UIGestureRecognizer) {
         print("Swiping to ")
+        attendeesView.reloadData()
         if flipped {
             flipped = false
             antiFlip()
@@ -167,7 +168,12 @@ extension AppointmentsViewController: UITableViewDelegate, UITableViewDataSource
         checkArrived(for: number, id: appointment.id!) { arrived in
             if arrived {
                 cell.textLabel?.textColor = .green
-            } 
+            } else {
+                // Not showed up and appointment has been
+                if Date() > self.appointment.date! {
+                    cell.textLabel?.textColor = .red
+                }
+            }
         }
         
         
